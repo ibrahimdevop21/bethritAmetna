@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LoyaltyDashboard from '../components/LoyaltyDashboard';
+import CustomerInfoForm from '../components/CustomerInfoForm.jsx';
+---
+
+<BaseLayout title="Loyalty Rewards Club" description="Join Bethrit Ametna Loyalty. Earn points and redeem exclusive rewards.">
+	<main class="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900 text-neutral-50">
+		<section class="px-4 pt-16 pb-10 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-6xl grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-center">
+				<div class="space-y-5">
+					<p class="text-xs font-semibold tracking-[0.25em] uppercase text-amber-300/80">Bethrit Ametna</p>
+					<h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight">Loyalty Rewards Club</h1>
+					<p class="max-w-xl text-sm sm:text-base text-neutral-300">
+						Join Bethrit Ametna Loyalty. Earn points with every purchase and redeem them for exclusive gifts and discounts.
+					</p>
+					<div class="flex flex-wrap gap-3">
+						<button class="inline-flex items-center rounded-full bg-gradient-to-tr from-amber-300 to-amber-500 px-5 py-2.5 text-sm font-semibold text-neutral-950 shadow-lg shadow-amber-500/30">
+							Sign Up / Join Now
+						</button>
+						<button class="inline-flex items-center rounded-full border border-amber-200/40 bg-black/20 px-5 py-2.5 text-sm font-semibold text-amber-100 hover:bg-black/40">
+							Log In
+						</button>
+					</div>
+					<p class="text-xs text-neutral-400">Every purchase brings you closer to exclusive gifts and offers.</p>
+				</div>
+				<div class="flex flex-col items-center gap-5">
+					<div class="w-full max-w-xs rounded-2xl bg-gradient-to-br from-[#2a1b12] via-[#5b3a23] to-[#2a1b12] p-5 shadow-loyalty-card border border-amber-50/5 relative overflow-hidden">
+						<div class="absolute -inset-10 bg-[radial-gradient(circle_at_top_left,rgba(245,214,160,0.35),transparent_60%)] pointer-events-none" />
+						<div class="relative flex items-center justify-between mb-6">
+							<div class="h-7 w-10 rounded-lg bg-gradient-to-tr from-amber-200 to-amber-500" />
+							<p class="text-[0.65rem] tracking-[0.25em] uppercase text-amber-100/80">Loyalty</p>
+						</div>
+						<p class="relative text-xs tracking-[0.22em] uppercase text-amber-100/90 mb-1">Loyalty Rewards</p>
+						<p class="relative text-[0.7rem] tracking-[0.18em] uppercase text-amber-50/70 mb-6">Earn · Collect · Redeem</p>
+						<div class="relative text-right">
+							<p class="text-2xl font-semibold tracking-[0.12em]">2,450</p>
+							<p class="text-[0.65rem] uppercase tracking-[0.22em] text-amber-50/80">Points</p>
+						</div>
+					</div>
+					<div class="flex gap-3">
+						<div class="h-9 w-9 rounded-full bg-[radial-gradient(circle_at_30%_25%,#f8dfac,#d09a55_55%,#8e5c2b_90%)] shadow-lg shadow-black/60 border border-amber-50/70" />
+						<div class="h-9 w-9 rounded-full bg-[radial-gradient(circle_at_30%_25%,#f8dfac,#d09a55_55%,#8e5c2b_90%)] shadow-lg shadow-black/60 border border-amber-50/70" />
+						<div class="h-9 w-9 rounded-full bg-[radial-gradient(circle_at_30%_25%,#f8dfac,#d09a55_55%,#8e5c2b_90%)] shadow-lg shadow-black/60 border border-amber-50/70" />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<CustomerInfoForm client:load />
+
+		<section class="px-4 py-10 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-6xl rounded-2xl border border-amber-100/10 bg-black/40 px-5 py-8 sm:px-8">
+				<div class="mb-6 space-y-2">
+					<h2 class="text-lg sm:text-xl font-semibold tracking-tight">How it works</h2>
+					<p class="max-w-2xl text-sm text-neutral-300">Simple, transparent, and rewarding with every Bethrit Ametna flavor.</p>
+				</div>
+				<div class="grid gap-4 md:grid-cols-3">
+					<article class="rounded-2xl border border-amber-100/10 bg-gradient-to-br from-neutral-900 to-neutral-950/90 p-5 shadow-lg shadow-black/40">
+						<div class="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-amber-300 to-amber-500 text-xs font-bold text-neutral-950">1</div>
+						<h3 class="mb-1 text-sm font-semibold">Buy Any Flavor</h3>
+						<p class="text-xs text-neutral-300">Scan the product barcode or upload your receipt after every purchase.</p>
+					</article>
+					<article class="rounded-2xl border border-amber-100/10 bg-gradient-to-br from-neutral-900 to-neutral-950/90 p-5 shadow-lg shadow-black/40">
+						<div class="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-amber-300 to-amber-500 text-xs font-bold text-neutral-950">2</div>
+						<h3 class="mb-1 text-sm font-semibold">Earn Points Automatically</h3>
+						<p class="text-xs text-neutral-300">Get <span class="font-semibold">10 points</span> for every eligible purchase added to your account.</p>
+					</article>
+					<article class="rounded-2xl border border-amber-100/10 bg-gradient-to-br from-neutral-900 to-neutral-950/90 p-5 shadow-lg shadow-black/40">
+						<div class="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-amber-300 to-amber-500 text-xs font-bold text-neutral-950">3</div>
+						<h3 class="mb-1 text-sm font-semibold">Redeem Rewards</h3>
+						<p class="text-xs text-neutral-300">Trade points for exclusive gifts, discounts, and early access drops.</p>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="px-4 py-10 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-6xl space-y-6">
+				<div class="space-y-2">
+					<h2 class="text-lg sm:text-xl font-semibold tracking-tight">Rewards tiers</h2>
+					<p class="max-w-2xl text-sm text-neutral-300">Unlock richer benefits as your points grow.</p>
+				</div>
+				<div class="grid gap-4 md:grid-cols-3">
+					<article class="relative overflow-hidden rounded-2xl border border-[color:rgb(205,127,50,0.4)] bg-gradient-to-b from-neutral-900 to-neutral-950 p-5 shadow-lg shadow-black/50">
+						<h3 class="text-sm font-semibold flex items-center gap-2">Bronze <span class="rounded-full bg-loyalty-bronze/20 px-2 py-0.5 text-[0.65rem] font-semibold text-loyalty-bronze border border-loyalty-bronze/40">0–100 pts</span></h3>
+						<p class="mt-2 text-xs text-neutral-300">Perfect for new members just starting their journey.</p>
+						<ul class="mt-3 space-y-1 text-xs text-neutral-200">
+							<li>Welcome gift</li>
+							<li>Monthly newsletter</li>
+						</ul>
+					</article>
+					<article class="relative overflow-hidden rounded-2xl border border-[color:rgb(192,192,192,0.5)] bg-gradient-to-b from-neutral-900 to-neutral-950 p-5 shadow-lg shadow-black/50">
+						<h3 class="text-sm font-semibold flex items-center gap-2">Silver <span class="rounded-full bg-loyalty-silver/15 px-2 py-0.5 text-[0.65rem] font-semibold text-loyalty-silver border border-loyalty-silver/40">100–300 pts</span></h3>
+						<p class="mt-2 text-xs text-neutral-300">Extra perks and early benefits as you climb.</p>
+						<ul class="mt-3 space-y-1 text-xs text-neutral-200">
+							<li>Early-bird discounts</li>
+							<li>Exclusive product samples</li>
+						</ul>
+					</article>
+					<article class="relative overflow-hidden rounded-2xl border border-[color:rgb(255,215,0,0.7)] bg-gradient-to-b from-[#2a1b12] via-[#5b3a23] to-[#1b120c] p-5 shadow-lg shadow-black/50">
+						<h3 class="text-sm font-semibold flex items-center gap-2">Gold <span class="rounded-full bg-loyalty-gold/20 px-2 py-0.5 text-[0.65rem] font-semibold text-loyalty-gold border border-loyalty-gold/60">300+ pts</span></h3>
+						<p class="mt-2 text-xs text-amber-50/90">The most generous rewards and VIP experiences.</p>
+						<ul class="mt-3 space-y-1 text-xs text-amber-50/95">
+							<li>Free products redeemable with points</li>
+							<li>VIP experiences & surprises</li>
+						</ul>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="px-4 py-10 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-6xl space-y-4">
+				<div class="space-y-2">
+					<h2 class="text-lg sm:text-xl font-semibold tracking-tight">Your loyalty dashboard</h2>
+					<p class="max-w-2xl text-sm text-neutral-300">Track your points, tier, and rewards in real time once you sign in.</p>
+				</div>
+				<div class="rounded-2xl border border-amber-100/10 bg-black/40 p-4 sm:p-6">
+					<LoyaltyDashboard client:load />
+				</div>
+			</div>
+		</section>
+
+		<section class="px-4 py-10 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-3xl space-y-5">
+				<div class="space-y-2">
+					<h2 class="text-lg sm:text-xl font-semibold tracking-tight">Frequently asked questions</h2>
+					<p class="text-sm text-neutral-300">Everything you need to know about earning and redeeming points.</p>
+				</div>
+				<div class="space-y-2">
+					<details class="group rounded-xl border border-amber-100/10 bg-black/40 px-4 py-3 text-sm">
+						<summary class="flex cursor-pointer list-none items-center justify-between text-left font-medium text-neutral-100">
+							<span>How do I earn points?</span>
+							<span class="text-xs text-neutral-400 group-open:hidden">+</span>
+							<span class="text-xs text-neutral-400 hidden group-open:inline">−</span>
+						</summary>
+						<p class="mt-2 text-xs text-neutral-300">
+							You earn <span class="font-semibold">10 points</span> for every eligible Bethrit Ametna purchase. Scan the product barcode or upload a clear photo of your receipt to have points added.
+						</p>
+					</details>
+					<details class="group rounded-xl border border-amber-100/10 bg-black/40 px-4 py-3 text-sm">
+						<summary class="flex cursor-pointer list-none items-center justify-between text-left font-medium text-neutral-100">
+							<span>When do my points appear?</span>
+							<span class="text-xs text-neutral-400 group-open:hidden">+</span>
+							<span class="text-xs text-neutral-400 hidden group-open:inline">−</span>
+						</summary>
+						<p class="mt-2 text-xs text-neutral-300">
+							Points usually appear in your dashboard within a few minutes. In some cases, it can take up to 24 hours while we validate your purchase.
+						</p>
+					</details>
+					<details class="group rounded-xl border border-amber-100/10 bg-black/40 px-4 py-3 text-sm">
+						<summary class="flex cursor-pointer list-none items-center justify-between text-left font-medium text-neutral-100">
+							<span>How do I redeem rewards?</span>
+							<span class="text-xs text-neutral-400 group-open:hidden">+</span>
+							<span class="text-xs text-neutral-400 hidden group-open:inline">−</span>
+						</summary>
+						<p class="mt-2 text-xs text-neutral-300">
+							From your dashboard, select <span class="font-semibold">Redeem rewards</span>, choose the reward you want, and confirm. You will receive a confirmation along with any code or instructions needed.
+						</p>
+					</details>
+					<details class="group rounded-xl border border-amber-100/10 bg-black/40 px-4 py-3 text-sm">
+						<summary class="flex cursor-pointer list-none items-center justify-between text-left font-medium text-neutral-100">
+							<span>Do my points expire?</span>
+							<span class="text-xs text-neutral-400 group-open:hidden">+</span>
+							<span class="text-xs text-neutral-400 hidden group-open:inline">−</span>
+						</summary>
+						<p class="mt-2 text-xs text-neutral-300">
+							Points typically remain valid for 12 months from the date they are earned. We will always email you before any points are due to expire.
+						</p>
+					</details>
+					<details class="group rounded-xl border border-amber-100/10 bg-black/40 px-4 py-3 text-sm">
+						<summary class="flex cursor-pointer list-none items-center justify-between text-left font-medium text-neutral-100">
+							<span>Is there a fee to join?</span>
+							<span class="text-xs text-neutral-400 group-open:hidden">+</span>
+							<span class="text-xs text-neutral-400 hidden group-open:inline">−</span>
+						</summary>
+						<p class="mt-2 text-xs text-neutral-300">
+							No – joining the Bethrit Ametna Loyalty Rewards Club is completely free.
+						</p>
+					</details>
+				</div>
+			</div>
+		</section>
+	</main>
+</BaseLayout>

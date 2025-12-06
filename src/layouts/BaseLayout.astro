@@ -1,0 +1,20 @@
+
+---
+import '../styles/global.css';
+
+const { title = 'Bethrit Ametna', description = '' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="h-full bg-neutral-950">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		{description && <meta name="description" content={description} />}
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	</head>
+	<body class="min-h-full bg-neutral-950 text-neutral-50 antialiased">
+		<slot />
+	</body>
+</html>
