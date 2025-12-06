@@ -13,6 +13,7 @@ export default function CustomerInfoForm() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [satisfaction, setSatisfaction] = useState(null);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
@@ -37,6 +38,7 @@ export default function CustomerInfoForm() {
       nextErrors.phone = 'Enter a valid Jordanian mobile number (e.g. 07XXXXXXXX or +9627XXXXXXXX).';
     }
     if (selectedCategories.length === 0) nextErrors.category = 'Select at least one category.';
+    if (!satisfaction) nextErrors.satisfaction = 'Select a satisfaction level.';
     return nextErrors;
   };
 
@@ -50,6 +52,7 @@ export default function CustomerInfoForm() {
       name: name.trim(),
       phone: phone.trim(),
       categories: selectedCategories,
+      satisfaction,
     };
     console.log('[Employee Customer Entry]', payload);
     setSubmitted(true);
@@ -86,7 +89,7 @@ export default function CustomerInfoForm() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full rounded-lg border border-neutral-700 bg-neutral-950/60 px-3 py-2 text-sm text-neutral-50 shadow-inner shadow-black/40 outline-none focus:border-amber-300 focus:ring-1 focus:ring-amber-400"
-                placeholder="e.g. Alex Doe"
+                placeholder="e.g. Adnan Ali عدنان علي"
               />
               {errors.name && <p className="text-[0.7rem] text-red-400">{errors.name}</p>}
             </div>
@@ -100,7 +103,7 @@ export default function CustomerInfoForm() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full rounded-lg border border-neutral-700 bg-neutral-950/60 px-3 py-2 text-sm text-neutral-50 shadow-inner shadow-black/40 outline-none focus:border-amber-300 focus:ring-1 focus:ring-amber-400"
-                placeholder="e.g. +1 (555) 123-4567"
+                placeholder="e.g. 0798765432"
               />
               {errors.phone && <p className="text-[0.7rem] text-red-400">{errors.phone}</p>}
             </div>
@@ -141,7 +144,42 @@ export default function CustomerInfoForm() {
             {errors.category && <p className="text-[0.7rem] text-red-400">{errors.category}</p>}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <div className="space-y-2 pt-1">
+            <p className="text-xs font-medium uppercase tracking-[0.16em] text-neutral-300">
+              Customer satisfaction (1–5)
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[1, 2, 3, 4, 5].map((value) => {
+                const emojis = {
+                  1: '😡', // very unhappy
+                  2: '☹️', // unhappy
+                  3: '😐', // neutral
+                  4: '🙂', // happy
+                  5: '🤩', // very happy
+                };
+                const isActive = satisfaction === value;
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setSatisfaction(value)}
+                    className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
+                      isActive
+                        ? 'border-amber-300/80 bg-amber-100/10 text-amber-50'
+                        : 'border-neutral-700 bg-neutral-950/60 text-neutral-200 hover:border-amber-200/50'
+                    }`}
+                  >
+                    <span className="text-base" aria-hidden="true">
+                      {emojis[value]}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            {errors.satisfaction && <p className="text-[0.7rem] text-red-400">{errors.satisfaction}</p>}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-3">
             <p className="text-[0.7rem] text-neutral-400">
               This form is for internal use only. Do not show this page to customers.
             </p>
