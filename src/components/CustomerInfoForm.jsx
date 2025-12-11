@@ -12,10 +12,15 @@ const CATEGORIES = [
 export default function CustomerInfoForm() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [employeeName, setEmployeeName] = useState('');
+  const [invoiceNumber, setInvoiceNumber] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [satisfaction, setSatisfaction] = useState(null);
+  const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState('');
 
   const isValidJordanianPhone = (raw) => {
     const cleaned = raw.replace(/[\s-]/g, '');
@@ -37,161 +42,253 @@ export default function CustomerInfoForm() {
     } else if (!isValidJordanianPhone(phone)) {
       nextErrors.phone = 'Enter a valid Jordanian mobile number (e.g. 07XXXXXXXX or +9627XXXXXXXX).';
     }
+    if (!employeeName.trim()) nextErrors.employeeName = 'Employee name is required.';
+    if (!invoiceNumber.trim()) nextErrors.invoiceNumber = 'Invoice number is required.';
     if (selectedCategories.length === 0) nextErrors.category = 'Select at least one category.';
     if (!satisfaction) nextErrors.satisfaction = 'Select a satisfaction level.';
     return nextErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatus('');
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
     const payload = {
-      name: name.trim(),
+      customer_name: name.trim(),
       phone: phone.trim(),
+      employee_name: employeeName.trim(),
+      invoice_number: invoiceNumber.trim(),
       categories: selectedCategories,
       satisfaction,
+      notes: notes.trim() || '',
     };
-    console.log('[Employee Customer Entry]', payload);
-    setSubmitted(true);
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/add-customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        console.error(data);
+        setStatus('❌ Failed to save entry.');
+        return;
+      }
+      setStatus('✅ Entry saved successfully.');
+      setName('');
+      setPhone('');
+      setEmployeeName('');
+      setInvoiceNumber('');
+      setSelectedCategories([]);
+      setSatisfaction(null);
+      setNotes('');
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setStatus('❌ Failed to save entry.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const emojis = {
+    1: '😡',
+    2: '☹️',
+    3: '😐',
+    4: '🙂',
+    5: '🤩',
   };
 
   return (
-    <section className="mt-6">
-      <div className="mx-auto max-w-3xl rounded-2xl border border-amber-100/15 bg-black/40 px-5 py-6 sm:px-6 sm:py-7 shadow-lg shadow-black/40">
-        <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-          <div>
-            <h2 className="text-sm sm:text-base font-semibold tracking-tight text-neutral-50">
-              Employee entry form
-            </h2>
-            <p className="text-xs text-neutral-300 max-w-xl">
-              Internal-only. Use this form while speaking with customers to capture basic details before the
-              production loyalty system is connected.
-            </p>
-          </div>
-          {submitted && (
-            <p className="mt-2 text-[0.7rem] font-medium text-emerald-300/90 sm:mt-0">
-              Saved for now in console only – no data is sent to a backend.
-            </p>
-          )}
+    <>
+      <div className="w-full max-w-lg mx-auto px-4 py-6 pb-40 sm:pb-10">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-lg font-semibold text-white">New Entry</h1>
+          <p className="text-[0.7rem] text-neutral-500 mt-1">Staff use only</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-medium uppercase tracking-[0.16em] text-neutral-300">
-                Customer name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-lg border border-neutral-700 bg-neutral-950/60 px-3 py-2 text-sm text-neutral-50 shadow-inner shadow-black/40 outline-none focus:border-amber-300 focus:ring-1 focus:ring-amber-400"
-                placeholder="e.g. Adnan Ali عدنان علي"
-              />
-              {errors.name && <p className="text-[0.7rem] text-red-400">{errors.name}</p>}
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="block text-xs font-medium uppercase tracking-[0.16em] text-neutral-300">
-                Phone number
-              </label>
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full rounded-lg border border-neutral-700 bg-neutral-950/60 px-3 py-2 text-sm text-neutral-50 shadow-inner shadow-black/40 outline-none focus:border-amber-300 focus:ring-1 focus:ring-amber-400"
-                placeholder="e.g. 0798765432"
-              />
-              {errors.phone && <p className="text-[0.7rem] text-red-400">{errors.phone}</p>}
-            </div>
+          {/* Customer Name */}
+          <div>
+            <label className="text-[0.65rem] uppercase tracking-wide text-neutral-400 mb-1 block">
+              Customer Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full rounded-md border border-neutral-700 bg-black px-3 py-3 text-sm text-white focus:border-amber-400 focus:ring-amber-300 focus:outline-none"
+              placeholder="e.g. Adnan Ali عدنان علي"
+            />
+            {errors.name && <p className="text-[0.65rem] text-red-400 mt-1">{errors.name}</p>}
           </div>
 
-          <div className="space-y-2">
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-neutral-300">
+          {/* Phone */}
+          <div>
+            <label className="text-[0.65rem] uppercase tracking-wide text-neutral-400 mb-1 block">
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full rounded-md border border-neutral-700 bg-black px-3 py-3 text-sm text-white focus:border-amber-400 focus:ring-amber-300 focus:outline-none"
+              placeholder="e.g. 0798765432"
+            />
+            {errors.phone && <p className="text-[0.65rem] text-red-400 mt-1">{errors.phone}</p>}
+          </div>
+
+          {/* Employee Name */}
+          <div>
+            <label className="text-[0.65rem] uppercase tracking-wide text-neutral-400 mb-1 block">
+              Employee Name
+            </label>
+            <input
+              type="text"
+              value={employeeName}
+              onChange={(e) => setEmployeeName(e.target.value)}
+              className="w-full rounded-md border border-neutral-700 bg-black px-3 py-3 text-sm text-white focus:border-amber-400 focus:ring-amber-300 focus:outline-none"
+              placeholder="e.g. Ahmad"
+            />
+            {errors.employeeName && <p className="text-[0.65rem] text-red-400 mt-1">{errors.employeeName}</p>}
+          </div>
+
+          {/* Invoice Number */}
+          <div>
+            <label className="text-[0.65rem] uppercase tracking-wide text-neutral-400 mb-1 block">
+              Invoice Number
+            </label>
+            <input
+              type="text"
+              value={invoiceNumber}
+              onChange={(e) => setInvoiceNumber(e.target.value)}
+              className="w-full rounded-md border border-neutral-700 bg-black px-3 py-3 text-sm text-white focus:border-amber-400 focus:ring-amber-300 focus:outline-none"
+              placeholder="e.g. INV-00123"
+            />
+            {errors.invoiceNumber && <p className="text-[0.65rem] text-red-400 mt-1">{errors.invoiceNumber}</p>}
+          </div>
+
+          {/* Categories */}
+          <div>
+            <label className="text-[0.65rem] uppercase tracking-wide text-neutral-400 mb-2 block">
               Categories
-            </p>
-            <div className="grid gap-2 sm:grid-cols-3">
-              {CATEGORIES.map((option) => (
-                <label
-                  key={option}
-                  className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-xs transition ${
-                    selectedCategories.includes(option)
-                      ? 'border-amber-300/80 bg-amber-100/10 text-amber-50'
-                      : 'border-neutral-700 bg-neutral-950/60 text-neutral-200 hover:border-amber-200/50'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    name="categories"
-                    value={option}
-                    checked={selectedCategories.includes(option)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedCategories((prev) => [...prev, option]);
-                      } else {
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {CATEGORIES.map((option) => {
+                const isSelected = selectedCategories.includes(option);
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => {
+                      if (isSelected) {
                         setSelectedCategories((prev) => prev.filter((c) => c !== option));
+                      } else {
+                        setSelectedCategories((prev) => [...prev, option]);
                       }
                     }}
-                    className="h-3 w-3 rounded-full border-neutral-600 text-amber-400 focus:ring-amber-400"
-                  />
-                  <span>{option}</span>
-                </label>
-              ))}
+                    className={`rounded-lg border px-3 py-3 text-xs font-medium text-left transition-all ${
+                      isSelected
+                        ? 'bg-amber-500/20 border-amber-400 text-amber-200'
+                        : 'bg-neutral-900 border-neutral-700 text-neutral-300'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
             </div>
-            {errors.category && <p className="text-[0.7rem] text-red-400">{errors.category}</p>}
+            {errors.category && <p className="text-[0.65rem] text-red-400 mt-1">{errors.category}</p>}
           </div>
 
-          <div className="space-y-2 pt-1">
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-neutral-300">
-              Customer satisfaction (1–5)
-            </p>
-            <div className="flex flex-wrap gap-2">
+          {/* Satisfaction */}
+          <div>
+            <label className="text-[0.65rem] uppercase tracking-wide text-neutral-400 mb-2 block">
+              Customer Satisfaction
+            </label>
+            <div className="flex justify-between gap-2">
               {[1, 2, 3, 4, 5].map((value) => {
-                const emojis = {
-                  1: '😡', // very unhappy
-                  2: '☹️', // unhappy
-                  3: '😐', // neutral
-                  4: '🙂', // happy
-                  5: '🤩', // very happy
-                };
                 const isActive = satisfaction === value;
                 return (
                   <button
                     key={value}
                     type="button"
                     onClick={() => setSatisfaction(value)}
-                    className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
+                    className={`flex-1 flex flex-col items-center justify-center rounded-lg border py-3 transition-all ${
                       isActive
-                        ? 'border-amber-300/80 bg-amber-100/10 text-amber-50'
-                        : 'border-neutral-700 bg-neutral-950/60 text-neutral-200 hover:border-amber-200/50'
+                        ? 'bg-amber-500/20 border-amber-400'
+                        : 'bg-neutral-900 border-neutral-700'
                     }`}
                   >
-                    <span className="text-base" aria-hidden="true">
-                      {emojis[value]}
+                    <span className="text-2xl">{emojis[value]}</span>
+                    <span className={`text-[0.6rem] mt-1 ${isActive ? 'text-amber-200' : 'text-neutral-500'}`}>
+                      {value}
                     </span>
                   </button>
                 );
               })}
             </div>
-            {errors.satisfaction && <p className="text-[0.7rem] text-red-400">{errors.satisfaction}</p>}
+            {errors.satisfaction && <p className="text-[0.65rem] text-red-400 mt-1">{errors.satisfaction}</p>}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-3">
-            <p className="text-[0.7rem] text-neutral-400">
-              This form is for internal use only. Do not show this page to customers.
+          {/* Notes */}
+          <div>
+            <label className="text-[0.65rem] uppercase tracking-wide text-neutral-400 mb-1 block">
+              Notes (optional)
+            </label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full rounded-md border border-neutral-700 bg-black px-3 py-3 text-sm text-white focus:border-amber-400 focus:ring-amber-300 focus:outline-none h-24 resize-none"
+              placeholder="Add any notes, observations, or special customer requests..."
+            />
+          </div>
+
+          {/* Status Message */}
+          {status && (
+            <div className={`rounded-md px-3 py-2 text-sm ${
+              status.includes('✅') ? 'bg-emerald-900/30 text-emerald-300' : 'bg-red-900/30 text-red-300'
+            }`}>
+              {status}
+            </div>
+          )}
+
+          {submitted && (
+            <p className="text-[0.65rem] text-emerald-400 text-center">
+              Entry saved to Google Sheets
             </p>
+          )}
+
+          {/* Desktop Save Button */}
+          <div className="hidden sm:block pt-4">
             <button
               type="submit"
-              className="inline-flex items-center rounded-full bg-gradient-to-tr from-amber-300 to-amber-500 px-4 py-2 text-xs font-semibold text-neutral-950 shadow-md shadow-amber-500/30 hover:brightness-110"
+              disabled={loading}
+              className="w-full max-w-xs mx-auto block rounded-xl bg-amber-400 py-3 font-semibold text-black disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-transform"
             >
-              Save entry (console only)
+              {loading ? 'Saving...' : 'Save Entry'}
             </button>
           </div>
         </form>
       </div>
-    </section>
+
+      {/* Mobile Sticky Footer */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm px-4 py-3 border-t border-neutral-800">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={loading}
+          className="w-full rounded-xl bg-amber-400 py-3 font-semibold text-black disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-transform"
+        >
+          {loading ? 'Saving...' : 'Save Entry'}
+        </button>
+      </div>
+    </>
   );
 }
